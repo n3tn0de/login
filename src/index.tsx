@@ -1,15 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
 import reportWebVitals from './reportWebVitals';
+
+import { RoutesPaths } from './constants'
+import { Dashboard } from './components/Dashboard/Dashboard'
+import { Login } from './components/Login/Login'
+import { CheckAuthRoute } from './components/CheckAuthRoute/CheckAuthRoute'
+
+import './index.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Switch>
+        <Route exact path='/'>
+          <Redirect
+            to={{
+              pathname: RoutesPaths.Dashboard,
+            }}
+          />
+        </Route>
+        <CheckAuthRoute path={RoutesPaths.Dashboard}>
+          <Dashboard />
+        </CheckAuthRoute>
+        <CheckAuthRoute
+          path={RoutesPaths.Login}
+          reverse={true}
+          redirectPath={RoutesPaths.Dashboard}
+        >
+          <Login />
+        </CheckAuthRoute>
+        <Route path='*'>
+          <h1>404 - Not Found</h1>
+        </Route>
+      </Switch>
+    </Router>
   </React.StrictMode>
 );
 

@@ -24,3 +24,5 @@ docker run -it -v $(pwd)/src:/app/src login npm start
 ```bash
 npm start
 ```
+
+You can access the app on <http://localhost:3000/>
