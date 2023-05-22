@@ -7,6 +7,14 @@ import {
   Redirect,
 } from "react-router-dom";
 
+import CssBaseline from '@mui/material/CssBaseline';
+import {
+  ThemeProvider,
+  ThemeOptions,
+  createTheme,
+  responsiveFontSizes,
+} from '@mui/material/styles';
+
 import reportWebVitals from './reportWebVitals';
 
 import { RoutesPaths } from './constants'
@@ -20,32 +28,50 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+export const themeOptions: ThemeOptions = {
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  },
+};
+
+let theme = createTheme(themeOptions);
+theme = responsiveFontSizes(theme);
+
 root.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route exact path='/'>
-          <Redirect
-            to={{
-              pathname: RoutesPaths.Dashboard,
-            }}
-          />
-        </Route>
-        <CheckAuthRoute path={RoutesPaths.Dashboard}>
-          <Dashboard />
-        </CheckAuthRoute>
-        <CheckAuthRoute
-          path={RoutesPaths.Login}
-          reverse={true}
-          redirectPath={RoutesPaths.Dashboard}
-        >
-          <Login />
-        </CheckAuthRoute>
-        <Route path='*'>
-          <h1>404 - Not Found</h1>
-        </Route>
-      </Switch>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Switch>
+          <Route exact path='/'>
+            <Redirect
+              to={{
+                pathname: RoutesPaths.Dashboard,
+              }}
+            />
+          </Route>
+          <CheckAuthRoute path={RoutesPaths.Dashboard}>
+            <Dashboard />
+          </CheckAuthRoute>
+          <CheckAuthRoute
+            path={RoutesPaths.Login}
+            reverse={true}
+            redirectPath={RoutesPaths.Dashboard}
+          >
+            <Login />
+          </CheckAuthRoute>
+          <Route path='*'>
+            <h1>404 - Not Found</h1>
+          </Route>
+        </Switch>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>
 );
 
