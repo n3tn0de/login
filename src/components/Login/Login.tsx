@@ -40,8 +40,7 @@ export const Login = () => {
     },
     onError: (error, variables, context: any) => {
       setError(String(error))
-      setLogin('')
-      setPassword('')
+      resetFields()
     },
     onSuccess: async (request, variables, context) => {
       try {
