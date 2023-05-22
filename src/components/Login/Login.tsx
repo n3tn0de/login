@@ -9,11 +9,63 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useMutation } from 'react-query'
+import { useHistory } from "react-router-dom";
+import { RoutesPaths } from '../../constants';
 
 export const Login = () => {
+  const history = useHistory();
+
   const [isPasswordVisible, togglePasswordVisibility] = useState(false)
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const resetFields = () => {
+    setLogin('')
+    setPassword('')
+  }
+
+  const mutation = useMutation({
+    mutationFn: ({ email, password }: any) => {
+      return fetch('https://reqres.in/api/login', {
+        // credentials: 'include',
+        method: 'post',
+        headers: {
+          Accept: `application/json`,
+          'Content-Type': `application/json`,
+        },
+        body: JSON.stringify({ email, password }),
+      })
+    },
+    onError: (error, variables, context: any) => {
+      setError(String(error))
+      setLogin('')
+      setPassword('')
+    },
+    onSuccess: async (request, variables, context) => {
+      try {
+        if (request.status === 400) {
+          const { error } = await request.json()
+          setError(error)
+          return
+        }
+
+
+        const data = await request.json()
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+          history.push(RoutesPaths.Dashboard)
+          return
+        }
+
+        throw new Error(JSON.stringify(data))
+      } catch(error) {
+        setError(String(error))
+        resetFields()
+      }
+    }
+  })
 
   const handleShowPassword = () => {
     togglePasswordVisibility(!isPasswordVisible)
@@ -29,7 +81,7 @@ export const Login = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    console.log(login, password)
+    mutation.mutate({ email: login, password})
   }
 
   return (
@@ -96,6 +148,7 @@ export const Login = () => {
           >
             Log In
           </Button>
+          {error && <span style={{color: 'red'}}>{error}</span>}
         </Box>
       </Grid>
     </Grid>

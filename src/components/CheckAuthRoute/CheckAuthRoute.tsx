@@ -4,8 +4,6 @@ import {
   Redirect,
 } from "react-router-dom";
 
-const token = localStorage.getItem('token')
-
 type Props = {
   path: string,
   redirectPath?: string,
@@ -19,6 +17,7 @@ export const CheckAuthRoute = ({
   ...rest
 }: PropsWithChildren<Props>
 ) => {
+  const token = localStorage.getItem('token')
   let hasAuth = (!token || token === null) ? false : true;
   // in case token is present but invalid, we can invalidate it by implementting
   // handler(s) for 403 API respone and also redirect user back to login
