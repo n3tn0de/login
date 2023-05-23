@@ -26,8 +26,3 @@ npm start
 ```
 
 You can access the app on <http://localhost:3000/>
-
-To reset session token run this command in browser console
-```js
-localStorage.setItem('token', '')
-```

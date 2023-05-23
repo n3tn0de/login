@@ -6,7 +6,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import {
@@ -44,11 +45,10 @@ export const themeOptions: ThemeOptions = {
 let theme = createTheme(themeOptions);
 theme = responsiveFontSizes(theme);
 
-const queryClient = new QueryClient()
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
@@ -76,7 +76,7 @@ root.render(
           </Switch>
         </Router>
       </ThemeProvider>
-    </QueryClientProvider>
+    </Provider>
   </React.StrictMode>
 );
 

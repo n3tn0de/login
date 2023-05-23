@@ -1,4 +1,7 @@
 import React, { PropsWithChildren } from 'react';
+import { useAppSelector } from '../../redux/hooks';
+import { selectUser } from '../../redux/slices/user';
+
 import {
   Route,
   Redirect,
@@ -17,7 +20,7 @@ export const CheckAuthRoute = ({
   ...rest
 }: PropsWithChildren<Props>
 ) => {
-  const token = localStorage.getItem('token')
+  const { token } = useAppSelector(selectUser)
   let hasAuth = (!token || token === null) ? false : true;
   // in case token is present but invalid, we can invalidate it by implementting
   // handler(s) for 403 API respone and also redirect user back to login
